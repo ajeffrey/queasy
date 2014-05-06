@@ -8,17 +8,19 @@ use PDO;
 class ConnectionException extends \RuntimeException {};
 
 class Connection {
+	static $MYSQL_PARAMS = array('username', 'password', 'database', 'host');
+
 	private $builder;
 	private $connection;
 
-	public function __construct($builder, $type, $params = []) {
+	public function __construct($builder, $type, $params = array()) {
 		$this->builder = $builder;
 
 		switch((string)$type) {
 			case 'mysql':
 
 				// Ensure we have all the required connection params
-				$missing_params = array_diff(['username', 'password', 'database', 'host'], array_keys($params));
+				$missing_params = array_diff(self::$MYSQL_PARAMS, array_keys($params));
 				if($missing_params) {
 					throw new ConnectionException('Missing connection parameters: ' . implode(', ', $missing_params));
 				}
@@ -49,7 +51,7 @@ class Connection {
 		return $this->getColumn('SELECT FOUND_ROWS()');
 	}
 
-	public function getColumn($sql, $bindings = []) {
+	public function getColumn($sql, $bindings = array()) {
 		$query = $this->executeSql($sql, $bindings);
 		return $query->fetchColumn(0);
 	}
