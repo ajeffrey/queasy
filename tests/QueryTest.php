@@ -4,12 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class QueryTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
-		$this->conn = new \Queasy\Connection(new \Queasy\Sql\SqlBuilder, 'mysql', [
-			'username' => MYSQL_TEST_USERNAME,
-			'password' => MYSQL_TEST_PASSWORD,
-			'database' => MYSQL_TEST_DATABASE,
-			'host' => MYSQL_TEST_HOST,
-		]);
+		$this->conn = new \Queasy\Connection(new \Queasy\Sql\SqlBuilder, 'test');
 	}
 
 	public function testBasicWhere() {

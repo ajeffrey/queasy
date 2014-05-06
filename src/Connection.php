@@ -36,6 +36,10 @@ class Connection {
 
 				break;
 
+			case 'test':
+				$this->connection = NULL;
+				break;
+
 			default:
 				throw new ConnectionException('Connection type "' . $type . '" not supported');
 		}
