@@ -122,8 +122,9 @@ class SqlBuilder {
 			}
 
 			$self = $this;
-			$wrap_fn = function($val) use($self) {
-				return $self->getField($val);
+			$wrap_fn = function($val) {
+				$class = __CLASS__;
+				return $class::getField($val);
 			};
 
 		} else {
@@ -212,7 +213,7 @@ class SqlBuilder {
 		return (string)$expr;
 	}
 
-	private function getField($field) {
+	static function getField($field) {
 		return '`' . str_replace('.', '`.`', $field) . '`';
 	}
 
