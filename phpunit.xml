@@ -1,0 +1,19 @@
+<phpunit>
+	<php>
+		<const name="MYSQL_TEST_USERNAME" value="root" />
+		<const name="MYSQL_TEST_PASSWORD" value="--removed--" />
+		<const name="MYSQL_TEST_DATABASE" value="test_basis_orm" />
+		<const name="MYSQL_TEST_HOST" value="localhost" />
+	</php>
+	<testsuites>
+		<testsuite name="All Tests">
+			<directory>tests</directory>
+		</testsuite>
+	</testsuites>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+</phpunit>
