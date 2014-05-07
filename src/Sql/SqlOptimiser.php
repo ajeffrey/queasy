@@ -5,7 +5,7 @@ use Queasy\Expression;
 
 class SqlOptimiser {
 	private $builder;
-	$enabled = array();
+	private $enabled = array();
 
 	public function __construct($builder) {
 		$this->builder = $builder;
