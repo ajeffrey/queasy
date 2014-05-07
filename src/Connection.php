@@ -11,12 +11,15 @@ class Connection {
 	static $MYSQL_PARAMS = array('username', 'password', 'database', 'host');
 
 	private $builder;
+	private $type;
 	private $connection;
+	private $params = array();
 
 	public function __construct($builder, $type, $params = array()) {
 		$this->builder = $builder;
+		$this->type = (string)$type;
 
-		switch((string)$type) {
+		switch($this->type) {
 			case 'mysql':
 
 				// Ensure we have all the required connection params
@@ -25,17 +28,11 @@ class Connection {
 					throw new ConnectionException('Missing connection parameters: ' . implode(', ', $missing_params));
 				}
 
+				// Save params for later reconnection
+				$this->params = $params;
+
 				// Attempt to connect to the database
-				try {
-					$dsn = 'mysql:dbname=' . $params['database'] . ';host=' . $params['host'];
-					$this->connection = new PDO($dsn, $params['username'], $params['password']);
-				    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
-				} catch(Exception $e) {
-					throw new ConnectionException('An error occurred while trying to connect to the database', 0, $e);
-				}
-
+				$this->connect();
 				break;
 
 			case 'test':
@@ -44,6 +41,26 @@ class Connection {
 
 			default:
 				throw new ConnectionException('Connection type "' . $type . '" not supported');
+		}
+	}
+
+	public function disconnect() {
+		switch($this->type) {
+			case 'mysql':
+				$this->connection = NULL;
+				break;
+		}
+	}
+
+	public function connect() {
+		try {
+			$dsn = 'mysql:dbname=' . $this->params['database'] . ';host=' . $this->params['host'];
+			$this->connection = new PDO($dsn, $this->params['username'], $this->params['password']);
+		    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+		} catch(Exception $e) {
+			throw new ConnectionException('An error occurred while trying to connect to the database', 0, $e);
 		}
 	}
 
@@ -94,9 +111,19 @@ class Connection {
 		return new SelectQuery($this, $from, $alias, $class);
 	}
 
-	private function executeSql($sql, $bindings = array()) {
-		$stmt = $this->connection->prepare($sql);
-		$stmt->execute($bindings);
+	protected function getConnection() {
+		return $this->connection;
+	}
+
+	protected function executeSql($sql, $bindings = array()) {
+        if(empty($bindings)) {
+            $stmt = $this->connection->query($sql);
+
+        } else {
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute($bindings);
+        }
+
 		return $stmt;
 	}
 };
