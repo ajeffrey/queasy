@@ -1,4 +1,4 @@
-<phpunit>
+<phpunit bootstrap="./vendor/autoload.php">
 	<php>
 		<const name="MYSQL_TEST_USERNAME" value="root" />
 		<const name="MYSQL_TEST_PASSWORD" value="--removed--" />
