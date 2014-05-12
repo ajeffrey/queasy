@@ -116,6 +116,10 @@ class Connection {
 	}
 
 	protected function executeSql($sql, $bindings = array()) {
+		if(!$this->connection) {
+			$this->connect();
+		}
+		
         if(empty($bindings)) {
             $stmt = $this->connection->query($sql);
 
