@@ -57,7 +57,7 @@ class Connection {
 			$dsn = 'mysql:dbname=' . $this->params['database'] . ';host=' . $this->params['host'];
 			$this->connection = new PDO($dsn, $this->params['username'], $this->params['password']);
 		    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+		    $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO__FETCH_OBJ);
 
 		} catch(Exception $e) {
 			throw new ConnectionException('An error occurred while trying to connect to the database', 0, $e);
