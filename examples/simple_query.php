@@ -10,7 +10,7 @@ $connection = new Connection(new SqlBuilder, 'mysql', array(
 	'host' => 'localhost',
 ));
 
-$query = $connection->query('projects')->withFields(array($connection->expr('*')));
+$query = $connection->query('projects');
 $query->where(array('project_id' => 1));
 //echo $query->toSql();die;
 var_dump($query->all());

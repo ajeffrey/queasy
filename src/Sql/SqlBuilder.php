@@ -36,27 +36,35 @@ class SqlBuilder {
 		$sql = new RawQuery("SELECT" . ($query->calc_rows ? " SQL_CALC_FOUND_ROWS" : "") . "\n");
 
 		$fields = array();
-		foreach($query->fields as $alias => $field) {
-			if($this->isExpression($field['field'])) {
-				$expr = $this->getExpression($field['field']);
 
-				if(is_int($alias)) {
-					$fields[] = "\t" . $expr;
+		// Default to SELECT *
+		if(empty($query->fields)) {
+			$fields = array("\t*");
+
+		// Extract queries
+		} else {
+			foreach($query->fields as $alias => $field) {
+				if($this->isExpression($field['field'])) {
+					$expr = $this->getExpression($field['field']);
+
+					if(is_int($alias)) {
+						$fields[] = "\t" . $expr;
+
+					} else {
+						$fields[] = "\t" . $expr . " AS " . $alias;
+					}
+
+				} elseif($this->isField($field['field'])) {
+					if(is_int($alias)) {
+						$fields[] = "\t" . $this->getField($field['table'] . '.' . $field['field']);
+
+					} else {
+						$fields[] = "\t" . $this->getField($field['table'] . '.' . $field['field']) . " AS " . $alias;
+					}
 
 				} else {
-					$fields[] = "\t" . $expr . " AS " . $alias;
+					$fields[] = "\t" . $this->getField($field['field']) . " AS " . $alias;
 				}
-
-			} elseif($this->isField($field['field'])) {
-				if(is_int($alias)) {
-					$fields[] = "\t" . $this->getField($field['table'] . '.' . $field['field']);
-
-				} else {
-					$fields[] = "\t" . $this->getField($field['table'] . '.' . $field['field']) . " AS " . $alias;
-				}
-
-			} else {
-				$fields[] = "\t" . $this->getField($field['field']) . " AS " . $alias;
 			}
 		}
 
