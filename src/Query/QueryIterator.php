@@ -15,7 +15,7 @@ class QueryIterator implements Iterator {
 	}
 
 	public function current() {
-		return $this->fetch($this->index);
+		return $this->at($this->index);
 	}
 
 	public function key() {
