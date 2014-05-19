@@ -37,13 +37,15 @@ class SqlBuilder {
 
 		$fields = array();
 
+		$query_fields = $query->getFields();
+
 		// Default to SELECT *
-		if(empty($query->fields)) {
+		if(empty($query_fields)) {
 			$fields = array("\t*");
 
 		// Extract queries
 		} else {
-			foreach($query->fields as $alias => $field) {
+			foreach($query_fields as $alias => $field) {
 				if($this->isExpression($field['field'])) {
 					$expr = $this->getExpression($field['field']);
 

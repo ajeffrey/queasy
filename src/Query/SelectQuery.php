@@ -90,6 +90,10 @@ class SelectQuery implements IteratorAggregate {
 	 	if($dt) $this->from = $dt;
 	 }
 
+	 public function getFields() {
+	 	return $this->fields;
+	 }
+
 	 public function setFields($fields) {
 	 	$this->fields = array();
 	 	return $this->withFields($fields);

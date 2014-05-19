@@ -39,8 +39,8 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		)->withFields(array('task_id'));
 
 		$this->assertEquals(
-			$this->simplify($q->toSql()),
-			$this->simplify(file_get_contents(__DIR__ . '/fixtures/basic_join.sql'))
+			$this->simplify(file_get_contents(__DIR__ . '/fixtures/basic_join.sql')),
+			$this->simplify($q->toSql())
 		);
 	}
 
