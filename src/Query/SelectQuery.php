@@ -314,7 +314,7 @@ class SelectQuery implements IteratorAggregate {
 			return $this->cache[__FUNCTION__];
 			
 		} else {
-			$result = $this->connection->fetchAll($this, $class);
+			$result = $this->connection->fetchAll($this);
 			$this->storeResult($result, __FUNCTION__);
 			return $result;
 		}
@@ -332,7 +332,7 @@ class SelectQuery implements IteratorAggregate {
 			
 		} else {
 			$this->limit(1);
-			$result = $this->connection->fetchOne($this, $class);
+			$result = $this->connection->fetch($this);
 			$this->storeResult($result, __FUNCTION__);
 			return $result;
 		}

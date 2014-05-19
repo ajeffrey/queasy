@@ -38,7 +38,7 @@ class RawQuery {
 	}
 
 	public function bindInt($val) {
-		return $this->bind(intval($val));
+		return intval($val);
 	}
 	
 };
