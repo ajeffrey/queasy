@@ -31,7 +31,7 @@ class QueryIterator implements Iterator {
 	}
 
 	public function valid() {
-		return $this->fetch($this->index) !== NULL;
+		return $this->at($this->index) !== NULL;
 	}
 
 	public function fetchAll() {
@@ -43,7 +43,13 @@ class QueryIterator implements Iterator {
 		return $rows;
 	}
 
-	private function fetch($index) {
+	public function fetch() {
+		$ret = $this->current();
+		$this->next();
+		return $ret;
+	}
+
+	private function at($index) {
 		if($this->class) {
 			$class = $this->class;
 
