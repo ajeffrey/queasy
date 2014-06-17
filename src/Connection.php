@@ -5,7 +5,23 @@ use Queasy\Query\SelectQuery;
 use Queasy\Expression;
 use PDO;
 
-class ConnectionException extends \RuntimeException {};
+class ConnectionException extends \RuntimeException {
+	private $sql;
+	private $bindings = array();
+
+	public function setQuery($sql, $bindings = array()) {
+		$this->sql = $sql;
+		$this->bindings = $bindings;
+	}
+
+	public function getQuery() {
+		return array(
+			'sql' => $this->sql,
+			'bindings' => $this->bindings,
+		);
+	}
+
+};
 
 class Connection {
 	static $MYSQL_PARAMS = array('username', 'password', 'database', 'host');
@@ -120,13 +136,20 @@ class Connection {
 			$this->connect();
 		}
 		
-        if(empty($bindings)) {
-            $stmt = $this->connection->query($sql);
+		try {
+	        if(empty($bindings)) {
+	            $stmt = $this->connection->query($sql);
 
-        } else {
-            $stmt = $this->connection->prepare($sql);
-            $stmt->execute($bindings);
-        }
+	        } else {
+	            $stmt = $this->connection->prepare($sql);
+	            $stmt->execute($bindings);
+	        }
+
+	    } catch(PDOException $e) {
+	    	$ex = new ConnectionException('Failed to execute query', 0, $e);
+	    	$ex->setQuery($sql, $bindings);
+	    	throw $ex;
+	    }
 
 		return $stmt;
 	}
